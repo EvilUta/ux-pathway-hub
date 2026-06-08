@@ -9,8 +9,26 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TimelineRouteImport } from './routes/timeline'
+import { Route as MateriaNaoCursadaRouteImport } from './routes/materia-nao-cursada'
+import { Route as GlossarioRouteImport } from './routes/glossario'
 import { Route as IndexRouteImport } from './routes/index'
 
+const TimelineRoute = TimelineRouteImport.update({
+  id: '/timeline',
+  path: '/timeline',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MateriaNaoCursadaRoute = MateriaNaoCursadaRouteImport.update({
+  id: '/materia-nao-cursada',
+  path: '/materia-nao-cursada',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GlossarioRoute = GlossarioRouteImport.update({
+  id: '/glossario',
+  path: '/glossario',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +37,61 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/glossario': typeof GlossarioRoute
+  '/materia-nao-cursada': typeof MateriaNaoCursadaRoute
+  '/timeline': typeof TimelineRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/glossario': typeof GlossarioRoute
+  '/materia-nao-cursada': typeof MateriaNaoCursadaRoute
+  '/timeline': typeof TimelineRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/glossario': typeof GlossarioRoute
+  '/materia-nao-cursada': typeof MateriaNaoCursadaRoute
+  '/timeline': typeof TimelineRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/glossario' | '/materia-nao-cursada' | '/timeline'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/glossario' | '/materia-nao-cursada' | '/timeline'
+  id: '__root__' | '/' | '/glossario' | '/materia-nao-cursada' | '/timeline'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  GlossarioRoute: typeof GlossarioRoute
+  MateriaNaoCursadaRoute: typeof MateriaNaoCursadaRoute
+  TimelineRoute: typeof TimelineRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/timeline': {
+      id: '/timeline'
+      path: '/timeline'
+      fullPath: '/timeline'
+      preLoaderRoute: typeof TimelineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/materia-nao-cursada': {
+      id: '/materia-nao-cursada'
+      path: '/materia-nao-cursada'
+      fullPath: '/materia-nao-cursada'
+      preLoaderRoute: typeof MateriaNaoCursadaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/glossario': {
+      id: '/glossario'
+      path: '/glossario'
+      fullPath: '/glossario'
+      preLoaderRoute: typeof GlossarioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,6 +104,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  GlossarioRoute: GlossarioRoute,
+  MateriaNaoCursadaRoute: MateriaNaoCursadaRoute,
+  TimelineRoute: TimelineRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
