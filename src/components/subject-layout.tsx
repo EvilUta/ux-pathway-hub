@@ -1,5 +1,5 @@
 import { Link, Outlet, useRouterState } from "@tanstack/react-router";
-import { BookOpen, Brain, FileText, FolderOpen, LayoutDashboard, Target } from "lucide-react";
+import { BookOpen, Brain, Briefcase, FileText, FolderOpen, LayoutDashboard, Target } from "lucide-react";
 import type { ComponentType } from "react";
 
 type Item = { to: string; label: string; icon: ComponentType<{ className?: string }> };
@@ -13,6 +13,10 @@ export function SubjectLayout({ slug, nome }: { slug: string; nome: string }) {
     { to: `${base}/materiais`, label: "Materiais", icon: FolderOpen },
     { to: `${base}/revisoes`, label: "Revisões", icon: Target },
   ];
+
+  if (slug === "portfolio") {
+    items.push({ to: `${base}/portfolio-real`, label: "Portfólio Real", icon: Briefcase });
+  }
 
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
@@ -28,6 +32,7 @@ export function SubjectLayout({ slug, nome }: { slug: string; nome: string }) {
             const active = pathname === it.to || (it.to !== base && pathname.startsWith(it.to));
             const isVisaoGeral = it.to === base;
             const isActive = isVisaoGeral ? pathname === base : active;
+
             return (
               <Link
                 key={it.to}

@@ -3,13 +3,14 @@ import { SubjectRevisoesPage } from "@/components/subject-revisoes-page";
 import { getDisciplina } from "@/lib/disciplinas";
 import { getSubjectStorageKeys } from "@/lib/subject-storage";
 
-export const Route = createFileRoute("/materias/concepcao-do-projeto/revisoes")({
-  component: Revisoes,
+export const Route = createFileRoute("/materias/$slug/revisoes")({
+  component: GenericRevisoes,
 });
 
-function Revisoes() {
-  const disciplina = getDisciplina("concepcao-do-projeto")!;
-  const storageKeys = getSubjectStorageKeys(disciplina.slug);
+function GenericRevisoes() {
+  const { slug } = Route.useParams();
+  const disciplina = getDisciplina(slug)!;
+  const storageKeys = getSubjectStorageKeys(slug);
 
   return <SubjectRevisoesPage disciplineName={disciplina.nome} storageKey={storageKeys.revisoes} />;
 }

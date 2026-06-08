@@ -14,11 +14,18 @@ import { Route as MateriaNaoCursadaRouteImport } from './routes/materia-nao-curs
 import { Route as GlossarioRouteImport } from './routes/glossario'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as MateriasConcepcaoDoProjetoRouteImport } from './routes/materias.concepcao-do-projeto'
+import { Route as MateriasSlugRouteImport } from './routes/materias.$slug'
 import { Route as MateriasConcepcaoDoProjetoIndexRouteImport } from './routes/materias.concepcao-do-projeto.index'
+import { Route as MateriasSlugIndexRouteImport } from './routes/materias.$slug.index'
 import { Route as MateriasConcepcaoDoProjetoRevisoesRouteImport } from './routes/materias.concepcao-do-projeto.revisoes'
 import { Route as MateriasConcepcaoDoProjetoResumosRouteImport } from './routes/materias.concepcao-do-projeto.resumos'
 import { Route as MateriasConcepcaoDoProjetoMateriaisRouteImport } from './routes/materias.concepcao-do-projeto.materiais'
 import { Route as MateriasConcepcaoDoProjetoFlashcardsRouteImport } from './routes/materias.concepcao-do-projeto.flashcards'
+import { Route as MateriasSlugRevisoesRouteImport } from './routes/materias.$slug.revisoes'
+import { Route as MateriasSlugResumosRouteImport } from './routes/materias.$slug.resumos'
+import { Route as MateriasSlugPortfolioRealRouteImport } from './routes/materias.$slug.portfolio-real'
+import { Route as MateriasSlugMateriaisRouteImport } from './routes/materias.$slug.materiais'
+import { Route as MateriasSlugFlashcardsRouteImport } from './routes/materias.$slug.flashcards'
 
 const TimelineRoute = TimelineRouteImport.update({
   id: '/timeline',
@@ -46,12 +53,22 @@ const MateriasConcepcaoDoProjetoRoute =
     path: '/materias/concepcao-do-projeto',
     getParentRoute: () => rootRouteImport,
   } as any)
+const MateriasSlugRoute = MateriasSlugRouteImport.update({
+  id: '/materias/$slug',
+  path: '/materias/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MateriasConcepcaoDoProjetoIndexRoute =
   MateriasConcepcaoDoProjetoIndexRouteImport.update({
     id: '/',
     path: '/',
     getParentRoute: () => MateriasConcepcaoDoProjetoRoute,
   } as any)
+const MateriasSlugIndexRoute = MateriasSlugIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MateriasSlugRoute,
+} as any)
 const MateriasConcepcaoDoProjetoRevisoesRoute =
   MateriasConcepcaoDoProjetoRevisoesRouteImport.update({
     id: '/revisoes',
@@ -76,17 +93,50 @@ const MateriasConcepcaoDoProjetoFlashcardsRoute =
     path: '/flashcards',
     getParentRoute: () => MateriasConcepcaoDoProjetoRoute,
   } as any)
+const MateriasSlugRevisoesRoute = MateriasSlugRevisoesRouteImport.update({
+  id: '/revisoes',
+  path: '/revisoes',
+  getParentRoute: () => MateriasSlugRoute,
+} as any)
+const MateriasSlugResumosRoute = MateriasSlugResumosRouteImport.update({
+  id: '/resumos',
+  path: '/resumos',
+  getParentRoute: () => MateriasSlugRoute,
+} as any)
+const MateriasSlugPortfolioRealRoute =
+  MateriasSlugPortfolioRealRouteImport.update({
+    id: '/portfolio-real',
+    path: '/portfolio-real',
+    getParentRoute: () => MateriasSlugRoute,
+  } as any)
+const MateriasSlugMateriaisRoute = MateriasSlugMateriaisRouteImport.update({
+  id: '/materiais',
+  path: '/materiais',
+  getParentRoute: () => MateriasSlugRoute,
+} as any)
+const MateriasSlugFlashcardsRoute = MateriasSlugFlashcardsRouteImport.update({
+  id: '/flashcards',
+  path: '/flashcards',
+  getParentRoute: () => MateriasSlugRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/glossario': typeof GlossarioRoute
   '/materia-nao-cursada': typeof MateriaNaoCursadaRoute
   '/timeline': typeof TimelineRoute
+  '/materias/$slug': typeof MateriasSlugRouteWithChildren
   '/materias/concepcao-do-projeto': typeof MateriasConcepcaoDoProjetoRouteWithChildren
+  '/materias/$slug/flashcards': typeof MateriasSlugFlashcardsRoute
+  '/materias/$slug/materiais': typeof MateriasSlugMateriaisRoute
+  '/materias/$slug/portfolio-real': typeof MateriasSlugPortfolioRealRoute
+  '/materias/$slug/resumos': typeof MateriasSlugResumosRoute
+  '/materias/$slug/revisoes': typeof MateriasSlugRevisoesRoute
   '/materias/concepcao-do-projeto/flashcards': typeof MateriasConcepcaoDoProjetoFlashcardsRoute
   '/materias/concepcao-do-projeto/materiais': typeof MateriasConcepcaoDoProjetoMateriaisRoute
   '/materias/concepcao-do-projeto/resumos': typeof MateriasConcepcaoDoProjetoResumosRoute
   '/materias/concepcao-do-projeto/revisoes': typeof MateriasConcepcaoDoProjetoRevisoesRoute
+  '/materias/$slug/': typeof MateriasSlugIndexRoute
   '/materias/concepcao-do-projeto/': typeof MateriasConcepcaoDoProjetoIndexRoute
 }
 export interface FileRoutesByTo {
@@ -94,10 +144,16 @@ export interface FileRoutesByTo {
   '/glossario': typeof GlossarioRoute
   '/materia-nao-cursada': typeof MateriaNaoCursadaRoute
   '/timeline': typeof TimelineRoute
+  '/materias/$slug/flashcards': typeof MateriasSlugFlashcardsRoute
+  '/materias/$slug/materiais': typeof MateriasSlugMateriaisRoute
+  '/materias/$slug/portfolio-real': typeof MateriasSlugPortfolioRealRoute
+  '/materias/$slug/resumos': typeof MateriasSlugResumosRoute
+  '/materias/$slug/revisoes': typeof MateriasSlugRevisoesRoute
   '/materias/concepcao-do-projeto/flashcards': typeof MateriasConcepcaoDoProjetoFlashcardsRoute
   '/materias/concepcao-do-projeto/materiais': typeof MateriasConcepcaoDoProjetoMateriaisRoute
   '/materias/concepcao-do-projeto/resumos': typeof MateriasConcepcaoDoProjetoResumosRoute
   '/materias/concepcao-do-projeto/revisoes': typeof MateriasConcepcaoDoProjetoRevisoesRoute
+  '/materias/$slug': typeof MateriasSlugIndexRoute
   '/materias/concepcao-do-projeto': typeof MateriasConcepcaoDoProjetoIndexRoute
 }
 export interface FileRoutesById {
@@ -106,11 +162,18 @@ export interface FileRoutesById {
   '/glossario': typeof GlossarioRoute
   '/materia-nao-cursada': typeof MateriaNaoCursadaRoute
   '/timeline': typeof TimelineRoute
+  '/materias/$slug': typeof MateriasSlugRouteWithChildren
   '/materias/concepcao-do-projeto': typeof MateriasConcepcaoDoProjetoRouteWithChildren
+  '/materias/$slug/flashcards': typeof MateriasSlugFlashcardsRoute
+  '/materias/$slug/materiais': typeof MateriasSlugMateriaisRoute
+  '/materias/$slug/portfolio-real': typeof MateriasSlugPortfolioRealRoute
+  '/materias/$slug/resumos': typeof MateriasSlugResumosRoute
+  '/materias/$slug/revisoes': typeof MateriasSlugRevisoesRoute
   '/materias/concepcao-do-projeto/flashcards': typeof MateriasConcepcaoDoProjetoFlashcardsRoute
   '/materias/concepcao-do-projeto/materiais': typeof MateriasConcepcaoDoProjetoMateriaisRoute
   '/materias/concepcao-do-projeto/resumos': typeof MateriasConcepcaoDoProjetoResumosRoute
   '/materias/concepcao-do-projeto/revisoes': typeof MateriasConcepcaoDoProjetoRevisoesRoute
+  '/materias/$slug/': typeof MateriasSlugIndexRoute
   '/materias/concepcao-do-projeto/': typeof MateriasConcepcaoDoProjetoIndexRoute
 }
 export interface FileRouteTypes {
@@ -120,11 +183,18 @@ export interface FileRouteTypes {
     | '/glossario'
     | '/materia-nao-cursada'
     | '/timeline'
+    | '/materias/$slug'
     | '/materias/concepcao-do-projeto'
+    | '/materias/$slug/flashcards'
+    | '/materias/$slug/materiais'
+    | '/materias/$slug/portfolio-real'
+    | '/materias/$slug/resumos'
+    | '/materias/$slug/revisoes'
     | '/materias/concepcao-do-projeto/flashcards'
     | '/materias/concepcao-do-projeto/materiais'
     | '/materias/concepcao-do-projeto/resumos'
     | '/materias/concepcao-do-projeto/revisoes'
+    | '/materias/$slug/'
     | '/materias/concepcao-do-projeto/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -132,10 +202,16 @@ export interface FileRouteTypes {
     | '/glossario'
     | '/materia-nao-cursada'
     | '/timeline'
+    | '/materias/$slug/flashcards'
+    | '/materias/$slug/materiais'
+    | '/materias/$slug/portfolio-real'
+    | '/materias/$slug/resumos'
+    | '/materias/$slug/revisoes'
     | '/materias/concepcao-do-projeto/flashcards'
     | '/materias/concepcao-do-projeto/materiais'
     | '/materias/concepcao-do-projeto/resumos'
     | '/materias/concepcao-do-projeto/revisoes'
+    | '/materias/$slug'
     | '/materias/concepcao-do-projeto'
   id:
     | '__root__'
@@ -143,11 +219,18 @@ export interface FileRouteTypes {
     | '/glossario'
     | '/materia-nao-cursada'
     | '/timeline'
+    | '/materias/$slug'
     | '/materias/concepcao-do-projeto'
+    | '/materias/$slug/flashcards'
+    | '/materias/$slug/materiais'
+    | '/materias/$slug/portfolio-real'
+    | '/materias/$slug/resumos'
+    | '/materias/$slug/revisoes'
     | '/materias/concepcao-do-projeto/flashcards'
     | '/materias/concepcao-do-projeto/materiais'
     | '/materias/concepcao-do-projeto/resumos'
     | '/materias/concepcao-do-projeto/revisoes'
+    | '/materias/$slug/'
     | '/materias/concepcao-do-projeto/'
   fileRoutesById: FileRoutesById
 }
@@ -156,6 +239,7 @@ export interface RootRouteChildren {
   GlossarioRoute: typeof GlossarioRoute
   MateriaNaoCursadaRoute: typeof MateriaNaoCursadaRoute
   TimelineRoute: typeof TimelineRoute
+  MateriasSlugRoute: typeof MateriasSlugRouteWithChildren
   MateriasConcepcaoDoProjetoRoute: typeof MateriasConcepcaoDoProjetoRouteWithChildren
 }
 
@@ -196,12 +280,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MateriasConcepcaoDoProjetoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/materias/$slug': {
+      id: '/materias/$slug'
+      path: '/materias/$slug'
+      fullPath: '/materias/$slug'
+      preLoaderRoute: typeof MateriasSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/materias/concepcao-do-projeto/': {
       id: '/materias/concepcao-do-projeto/'
       path: '/'
       fullPath: '/materias/concepcao-do-projeto/'
       preLoaderRoute: typeof MateriasConcepcaoDoProjetoIndexRouteImport
       parentRoute: typeof MateriasConcepcaoDoProjetoRoute
+    }
+    '/materias/$slug/': {
+      id: '/materias/$slug/'
+      path: '/'
+      fullPath: '/materias/$slug/'
+      preLoaderRoute: typeof MateriasSlugIndexRouteImport
+      parentRoute: typeof MateriasSlugRoute
     }
     '/materias/concepcao-do-projeto/revisoes': {
       id: '/materias/concepcao-do-projeto/revisoes'
@@ -231,8 +329,65 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MateriasConcepcaoDoProjetoFlashcardsRouteImport
       parentRoute: typeof MateriasConcepcaoDoProjetoRoute
     }
+    '/materias/$slug/revisoes': {
+      id: '/materias/$slug/revisoes'
+      path: '/revisoes'
+      fullPath: '/materias/$slug/revisoes'
+      preLoaderRoute: typeof MateriasSlugRevisoesRouteImport
+      parentRoute: typeof MateriasSlugRoute
+    }
+    '/materias/$slug/resumos': {
+      id: '/materias/$slug/resumos'
+      path: '/resumos'
+      fullPath: '/materias/$slug/resumos'
+      preLoaderRoute: typeof MateriasSlugResumosRouteImport
+      parentRoute: typeof MateriasSlugRoute
+    }
+    '/materias/$slug/portfolio-real': {
+      id: '/materias/$slug/portfolio-real'
+      path: '/portfolio-real'
+      fullPath: '/materias/$slug/portfolio-real'
+      preLoaderRoute: typeof MateriasSlugPortfolioRealRouteImport
+      parentRoute: typeof MateriasSlugRoute
+    }
+    '/materias/$slug/materiais': {
+      id: '/materias/$slug/materiais'
+      path: '/materiais'
+      fullPath: '/materias/$slug/materiais'
+      preLoaderRoute: typeof MateriasSlugMateriaisRouteImport
+      parentRoute: typeof MateriasSlugRoute
+    }
+    '/materias/$slug/flashcards': {
+      id: '/materias/$slug/flashcards'
+      path: '/flashcards'
+      fullPath: '/materias/$slug/flashcards'
+      preLoaderRoute: typeof MateriasSlugFlashcardsRouteImport
+      parentRoute: typeof MateriasSlugRoute
+    }
   }
 }
+
+interface MateriasSlugRouteChildren {
+  MateriasSlugFlashcardsRoute: typeof MateriasSlugFlashcardsRoute
+  MateriasSlugMateriaisRoute: typeof MateriasSlugMateriaisRoute
+  MateriasSlugPortfolioRealRoute: typeof MateriasSlugPortfolioRealRoute
+  MateriasSlugResumosRoute: typeof MateriasSlugResumosRoute
+  MateriasSlugRevisoesRoute: typeof MateriasSlugRevisoesRoute
+  MateriasSlugIndexRoute: typeof MateriasSlugIndexRoute
+}
+
+const MateriasSlugRouteChildren: MateriasSlugRouteChildren = {
+  MateriasSlugFlashcardsRoute: MateriasSlugFlashcardsRoute,
+  MateriasSlugMateriaisRoute: MateriasSlugMateriaisRoute,
+  MateriasSlugPortfolioRealRoute: MateriasSlugPortfolioRealRoute,
+  MateriasSlugResumosRoute: MateriasSlugResumosRoute,
+  MateriasSlugRevisoesRoute: MateriasSlugRevisoesRoute,
+  MateriasSlugIndexRoute: MateriasSlugIndexRoute,
+}
+
+const MateriasSlugRouteWithChildren = MateriasSlugRoute._addFileChildren(
+  MateriasSlugRouteChildren,
+)
 
 interface MateriasConcepcaoDoProjetoRouteChildren {
   MateriasConcepcaoDoProjetoFlashcardsRoute: typeof MateriasConcepcaoDoProjetoFlashcardsRoute
@@ -265,8 +420,19 @@ const rootRouteChildren: RootRouteChildren = {
   GlossarioRoute: GlossarioRoute,
   MateriaNaoCursadaRoute: MateriaNaoCursadaRoute,
   TimelineRoute: TimelineRoute,
+  MateriasSlugRoute: MateriasSlugRouteWithChildren,
   MateriasConcepcaoDoProjetoRoute: MateriasConcepcaoDoProjetoRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
