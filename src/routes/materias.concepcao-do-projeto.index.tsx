@@ -14,8 +14,6 @@ function VisaoGeral() {
 
   const stats = [
     { label: "Status", value: "Concluída" },
-    { label: "Progresso", value: "100%" },
-    { label: "Questões", value: 20 },
     { label: "Flashcards", value: flashcards.length },
     { label: "Resumos", value: resumos.length },
   ];

@@ -1,5 +1,5 @@
 import { Link, Outlet, useRouterState } from "@tanstack/react-router";
-import { BookOpen, Brain, FileText, FolderOpen, HelpCircle, LayoutDashboard, Target, TrendingUp } from "lucide-react";
+import { BookOpen, Brain, FileText, FolderOpen, LayoutDashboard, Target } from "lucide-react";
 import type { ComponentType } from "react";
 
 type Item = { to: string; label: string; icon: ComponentType<{ className?: string }> };
@@ -10,10 +10,8 @@ export function SubjectLayout({ slug, nome }: { slug: string; nome: string }) {
     { to: base, label: "Visão Geral", icon: LayoutDashboard },
     { to: `${base}/resumos`, label: "Resumos", icon: FileText },
     { to: `${base}/flashcards`, label: "Flashcards", icon: Brain },
-    { to: `${base}/questoes`, label: "Questões", icon: HelpCircle },
     { to: `${base}/materiais`, label: "Materiais", icon: FolderOpen },
     { to: `${base}/revisoes`, label: "Revisões", icon: Target },
-    { to: `${base}/progresso`, label: "Progresso", icon: TrendingUp },
   ];
 
   const pathname = useRouterState({ select: (s) => s.location.pathname });

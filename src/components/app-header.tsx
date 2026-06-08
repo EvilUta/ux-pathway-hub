@@ -6,7 +6,7 @@ const navItems = [
   { to: "/", label: "Dashboard" },
   { to: "/timeline", label: "Timeline" },
   { to: "/glossario", label: "Glossário" },
-  { to: "/simulados", label: "Simulados" },
+  
 ];
 
 export function AppHeader() {
