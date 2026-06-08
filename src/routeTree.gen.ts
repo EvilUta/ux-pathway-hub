@@ -10,7 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TimelineRouteImport } from './routes/timeline'
-import { Route as SimuladosRouteImport } from './routes/simulados'
 import { Route as MateriaNaoCursadaRouteImport } from './routes/materia-nao-cursada'
 import { Route as GlossarioRouteImport } from './routes/glossario'
 import { Route as IndexRouteImport } from './routes/index'
@@ -18,19 +17,12 @@ import { Route as MateriasConcepcaoDoProjetoRouteImport } from './routes/materia
 import { Route as MateriasConcepcaoDoProjetoIndexRouteImport } from './routes/materias.concepcao-do-projeto.index'
 import { Route as MateriasConcepcaoDoProjetoRevisoesRouteImport } from './routes/materias.concepcao-do-projeto.revisoes'
 import { Route as MateriasConcepcaoDoProjetoResumosRouteImport } from './routes/materias.concepcao-do-projeto.resumos'
-import { Route as MateriasConcepcaoDoProjetoQuestoesRouteImport } from './routes/materias.concepcao-do-projeto.questoes'
-import { Route as MateriasConcepcaoDoProjetoProgressoRouteImport } from './routes/materias.concepcao-do-projeto.progresso'
 import { Route as MateriasConcepcaoDoProjetoMateriaisRouteImport } from './routes/materias.concepcao-do-projeto.materiais'
 import { Route as MateriasConcepcaoDoProjetoFlashcardsRouteImport } from './routes/materias.concepcao-do-projeto.flashcards'
 
 const TimelineRoute = TimelineRouteImport.update({
   id: '/timeline',
   path: '/timeline',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SimuladosRoute = SimuladosRouteImport.update({
-  id: '/simulados',
-  path: '/simulados',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MateriaNaoCursadaRoute = MateriaNaoCursadaRouteImport.update({
@@ -72,18 +64,6 @@ const MateriasConcepcaoDoProjetoResumosRoute =
     path: '/resumos',
     getParentRoute: () => MateriasConcepcaoDoProjetoRoute,
   } as any)
-const MateriasConcepcaoDoProjetoQuestoesRoute =
-  MateriasConcepcaoDoProjetoQuestoesRouteImport.update({
-    id: '/questoes',
-    path: '/questoes',
-    getParentRoute: () => MateriasConcepcaoDoProjetoRoute,
-  } as any)
-const MateriasConcepcaoDoProjetoProgressoRoute =
-  MateriasConcepcaoDoProjetoProgressoRouteImport.update({
-    id: '/progresso',
-    path: '/progresso',
-    getParentRoute: () => MateriasConcepcaoDoProjetoRoute,
-  } as any)
 const MateriasConcepcaoDoProjetoMateriaisRoute =
   MateriasConcepcaoDoProjetoMateriaisRouteImport.update({
     id: '/materiais',
@@ -101,13 +81,10 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/glossario': typeof GlossarioRoute
   '/materia-nao-cursada': typeof MateriaNaoCursadaRoute
-  '/simulados': typeof SimuladosRoute
   '/timeline': typeof TimelineRoute
   '/materias/concepcao-do-projeto': typeof MateriasConcepcaoDoProjetoRouteWithChildren
   '/materias/concepcao-do-projeto/flashcards': typeof MateriasConcepcaoDoProjetoFlashcardsRoute
   '/materias/concepcao-do-projeto/materiais': typeof MateriasConcepcaoDoProjetoMateriaisRoute
-  '/materias/concepcao-do-projeto/progresso': typeof MateriasConcepcaoDoProjetoProgressoRoute
-  '/materias/concepcao-do-projeto/questoes': typeof MateriasConcepcaoDoProjetoQuestoesRoute
   '/materias/concepcao-do-projeto/resumos': typeof MateriasConcepcaoDoProjetoResumosRoute
   '/materias/concepcao-do-projeto/revisoes': typeof MateriasConcepcaoDoProjetoRevisoesRoute
   '/materias/concepcao-do-projeto/': typeof MateriasConcepcaoDoProjetoIndexRoute
@@ -116,12 +93,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/glossario': typeof GlossarioRoute
   '/materia-nao-cursada': typeof MateriaNaoCursadaRoute
-  '/simulados': typeof SimuladosRoute
   '/timeline': typeof TimelineRoute
   '/materias/concepcao-do-projeto/flashcards': typeof MateriasConcepcaoDoProjetoFlashcardsRoute
   '/materias/concepcao-do-projeto/materiais': typeof MateriasConcepcaoDoProjetoMateriaisRoute
-  '/materias/concepcao-do-projeto/progresso': typeof MateriasConcepcaoDoProjetoProgressoRoute
-  '/materias/concepcao-do-projeto/questoes': typeof MateriasConcepcaoDoProjetoQuestoesRoute
   '/materias/concepcao-do-projeto/resumos': typeof MateriasConcepcaoDoProjetoResumosRoute
   '/materias/concepcao-do-projeto/revisoes': typeof MateriasConcepcaoDoProjetoRevisoesRoute
   '/materias/concepcao-do-projeto': typeof MateriasConcepcaoDoProjetoIndexRoute
@@ -131,13 +105,10 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/glossario': typeof GlossarioRoute
   '/materia-nao-cursada': typeof MateriaNaoCursadaRoute
-  '/simulados': typeof SimuladosRoute
   '/timeline': typeof TimelineRoute
   '/materias/concepcao-do-projeto': typeof MateriasConcepcaoDoProjetoRouteWithChildren
   '/materias/concepcao-do-projeto/flashcards': typeof MateriasConcepcaoDoProjetoFlashcardsRoute
   '/materias/concepcao-do-projeto/materiais': typeof MateriasConcepcaoDoProjetoMateriaisRoute
-  '/materias/concepcao-do-projeto/progresso': typeof MateriasConcepcaoDoProjetoProgressoRoute
-  '/materias/concepcao-do-projeto/questoes': typeof MateriasConcepcaoDoProjetoQuestoesRoute
   '/materias/concepcao-do-projeto/resumos': typeof MateriasConcepcaoDoProjetoResumosRoute
   '/materias/concepcao-do-projeto/revisoes': typeof MateriasConcepcaoDoProjetoRevisoesRoute
   '/materias/concepcao-do-projeto/': typeof MateriasConcepcaoDoProjetoIndexRoute
@@ -148,13 +119,10 @@ export interface FileRouteTypes {
     | '/'
     | '/glossario'
     | '/materia-nao-cursada'
-    | '/simulados'
     | '/timeline'
     | '/materias/concepcao-do-projeto'
     | '/materias/concepcao-do-projeto/flashcards'
     | '/materias/concepcao-do-projeto/materiais'
-    | '/materias/concepcao-do-projeto/progresso'
-    | '/materias/concepcao-do-projeto/questoes'
     | '/materias/concepcao-do-projeto/resumos'
     | '/materias/concepcao-do-projeto/revisoes'
     | '/materias/concepcao-do-projeto/'
@@ -163,12 +131,9 @@ export interface FileRouteTypes {
     | '/'
     | '/glossario'
     | '/materia-nao-cursada'
-    | '/simulados'
     | '/timeline'
     | '/materias/concepcao-do-projeto/flashcards'
     | '/materias/concepcao-do-projeto/materiais'
-    | '/materias/concepcao-do-projeto/progresso'
-    | '/materias/concepcao-do-projeto/questoes'
     | '/materias/concepcao-do-projeto/resumos'
     | '/materias/concepcao-do-projeto/revisoes'
     | '/materias/concepcao-do-projeto'
@@ -177,13 +142,10 @@ export interface FileRouteTypes {
     | '/'
     | '/glossario'
     | '/materia-nao-cursada'
-    | '/simulados'
     | '/timeline'
     | '/materias/concepcao-do-projeto'
     | '/materias/concepcao-do-projeto/flashcards'
     | '/materias/concepcao-do-projeto/materiais'
-    | '/materias/concepcao-do-projeto/progresso'
-    | '/materias/concepcao-do-projeto/questoes'
     | '/materias/concepcao-do-projeto/resumos'
     | '/materias/concepcao-do-projeto/revisoes'
     | '/materias/concepcao-do-projeto/'
@@ -193,7 +155,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   GlossarioRoute: typeof GlossarioRoute
   MateriaNaoCursadaRoute: typeof MateriaNaoCursadaRoute
-  SimuladosRoute: typeof SimuladosRoute
   TimelineRoute: typeof TimelineRoute
   MateriasConcepcaoDoProjetoRoute: typeof MateriasConcepcaoDoProjetoRouteWithChildren
 }
@@ -205,13 +166,6 @@ declare module '@tanstack/react-router' {
       path: '/timeline'
       fullPath: '/timeline'
       preLoaderRoute: typeof TimelineRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/simulados': {
-      id: '/simulados'
-      path: '/simulados'
-      fullPath: '/simulados'
-      preLoaderRoute: typeof SimuladosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/materia-nao-cursada': {
@@ -263,20 +217,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MateriasConcepcaoDoProjetoResumosRouteImport
       parentRoute: typeof MateriasConcepcaoDoProjetoRoute
     }
-    '/materias/concepcao-do-projeto/questoes': {
-      id: '/materias/concepcao-do-projeto/questoes'
-      path: '/questoes'
-      fullPath: '/materias/concepcao-do-projeto/questoes'
-      preLoaderRoute: typeof MateriasConcepcaoDoProjetoQuestoesRouteImport
-      parentRoute: typeof MateriasConcepcaoDoProjetoRoute
-    }
-    '/materias/concepcao-do-projeto/progresso': {
-      id: '/materias/concepcao-do-projeto/progresso'
-      path: '/progresso'
-      fullPath: '/materias/concepcao-do-projeto/progresso'
-      preLoaderRoute: typeof MateriasConcepcaoDoProjetoProgressoRouteImport
-      parentRoute: typeof MateriasConcepcaoDoProjetoRoute
-    }
     '/materias/concepcao-do-projeto/materiais': {
       id: '/materias/concepcao-do-projeto/materiais'
       path: '/materiais'
@@ -297,8 +237,6 @@ declare module '@tanstack/react-router' {
 interface MateriasConcepcaoDoProjetoRouteChildren {
   MateriasConcepcaoDoProjetoFlashcardsRoute: typeof MateriasConcepcaoDoProjetoFlashcardsRoute
   MateriasConcepcaoDoProjetoMateriaisRoute: typeof MateriasConcepcaoDoProjetoMateriaisRoute
-  MateriasConcepcaoDoProjetoProgressoRoute: typeof MateriasConcepcaoDoProjetoProgressoRoute
-  MateriasConcepcaoDoProjetoQuestoesRoute: typeof MateriasConcepcaoDoProjetoQuestoesRoute
   MateriasConcepcaoDoProjetoResumosRoute: typeof MateriasConcepcaoDoProjetoResumosRoute
   MateriasConcepcaoDoProjetoRevisoesRoute: typeof MateriasConcepcaoDoProjetoRevisoesRoute
   MateriasConcepcaoDoProjetoIndexRoute: typeof MateriasConcepcaoDoProjetoIndexRoute
@@ -310,10 +248,6 @@ const MateriasConcepcaoDoProjetoRouteChildren: MateriasConcepcaoDoProjetoRouteCh
       MateriasConcepcaoDoProjetoFlashcardsRoute,
     MateriasConcepcaoDoProjetoMateriaisRoute:
       MateriasConcepcaoDoProjetoMateriaisRoute,
-    MateriasConcepcaoDoProjetoProgressoRoute:
-      MateriasConcepcaoDoProjetoProgressoRoute,
-    MateriasConcepcaoDoProjetoQuestoesRoute:
-      MateriasConcepcaoDoProjetoQuestoesRoute,
     MateriasConcepcaoDoProjetoResumosRoute:
       MateriasConcepcaoDoProjetoResumosRoute,
     MateriasConcepcaoDoProjetoRevisoesRoute:
@@ -330,10 +264,19 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   GlossarioRoute: GlossarioRoute,
   MateriaNaoCursadaRoute: MateriaNaoCursadaRoute,
-  SimuladosRoute: SimuladosRoute,
   TimelineRoute: TimelineRoute,
   MateriasConcepcaoDoProjetoRoute: MateriasConcepcaoDoProjetoRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
