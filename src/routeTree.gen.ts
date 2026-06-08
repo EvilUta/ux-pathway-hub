@@ -9,38 +9,225 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TimelineRouteImport } from './routes/timeline'
+import { Route as SimuladosRouteImport } from './routes/simulados'
+import { Route as MateriaNaoCursadaRouteImport } from './routes/materia-nao-cursada'
+import { Route as GlossarioRouteImport } from './routes/glossario'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as MateriasConcepcaoDoProjetoRouteImport } from './routes/materias.concepcao-do-projeto'
+import { Route as MateriasConcepcaoDoProjetoIndexRouteImport } from './routes/materias.concepcao-do-projeto.index'
+import { Route as MateriasConcepcaoDoProjetoRevisoesRouteImport } from './routes/materias.concepcao-do-projeto.revisoes'
+import { Route as MateriasConcepcaoDoProjetoResumosRouteImport } from './routes/materias.concepcao-do-projeto.resumos'
+import { Route as MateriasConcepcaoDoProjetoQuestoesRouteImport } from './routes/materias.concepcao-do-projeto.questoes'
+import { Route as MateriasConcepcaoDoProjetoProgressoRouteImport } from './routes/materias.concepcao-do-projeto.progresso'
+import { Route as MateriasConcepcaoDoProjetoMateriaisRouteImport } from './routes/materias.concepcao-do-projeto.materiais'
+import { Route as MateriasConcepcaoDoProjetoFlashcardsRouteImport } from './routes/materias.concepcao-do-projeto.flashcards'
 
+const TimelineRoute = TimelineRouteImport.update({
+  id: '/timeline',
+  path: '/timeline',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SimuladosRoute = SimuladosRouteImport.update({
+  id: '/simulados',
+  path: '/simulados',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MateriaNaoCursadaRoute = MateriaNaoCursadaRouteImport.update({
+  id: '/materia-nao-cursada',
+  path: '/materia-nao-cursada',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GlossarioRoute = GlossarioRouteImport.update({
+  id: '/glossario',
+  path: '/glossario',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MateriasConcepcaoDoProjetoRoute =
+  MateriasConcepcaoDoProjetoRouteImport.update({
+    id: '/materias/concepcao-do-projeto',
+    path: '/materias/concepcao-do-projeto',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MateriasConcepcaoDoProjetoIndexRoute =
+  MateriasConcepcaoDoProjetoIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => MateriasConcepcaoDoProjetoRoute,
+  } as any)
+const MateriasConcepcaoDoProjetoRevisoesRoute =
+  MateriasConcepcaoDoProjetoRevisoesRouteImport.update({
+    id: '/revisoes',
+    path: '/revisoes',
+    getParentRoute: () => MateriasConcepcaoDoProjetoRoute,
+  } as any)
+const MateriasConcepcaoDoProjetoResumosRoute =
+  MateriasConcepcaoDoProjetoResumosRouteImport.update({
+    id: '/resumos',
+    path: '/resumos',
+    getParentRoute: () => MateriasConcepcaoDoProjetoRoute,
+  } as any)
+const MateriasConcepcaoDoProjetoQuestoesRoute =
+  MateriasConcepcaoDoProjetoQuestoesRouteImport.update({
+    id: '/questoes',
+    path: '/questoes',
+    getParentRoute: () => MateriasConcepcaoDoProjetoRoute,
+  } as any)
+const MateriasConcepcaoDoProjetoProgressoRoute =
+  MateriasConcepcaoDoProjetoProgressoRouteImport.update({
+    id: '/progresso',
+    path: '/progresso',
+    getParentRoute: () => MateriasConcepcaoDoProjetoRoute,
+  } as any)
+const MateriasConcepcaoDoProjetoMateriaisRoute =
+  MateriasConcepcaoDoProjetoMateriaisRouteImport.update({
+    id: '/materiais',
+    path: '/materiais',
+    getParentRoute: () => MateriasConcepcaoDoProjetoRoute,
+  } as any)
+const MateriasConcepcaoDoProjetoFlashcardsRoute =
+  MateriasConcepcaoDoProjetoFlashcardsRouteImport.update({
+    id: '/flashcards',
+    path: '/flashcards',
+    getParentRoute: () => MateriasConcepcaoDoProjetoRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/glossario': typeof GlossarioRoute
+  '/materia-nao-cursada': typeof MateriaNaoCursadaRoute
+  '/simulados': typeof SimuladosRoute
+  '/timeline': typeof TimelineRoute
+  '/materias/concepcao-do-projeto': typeof MateriasConcepcaoDoProjetoRouteWithChildren
+  '/materias/concepcao-do-projeto/flashcards': typeof MateriasConcepcaoDoProjetoFlashcardsRoute
+  '/materias/concepcao-do-projeto/materiais': typeof MateriasConcepcaoDoProjetoMateriaisRoute
+  '/materias/concepcao-do-projeto/progresso': typeof MateriasConcepcaoDoProjetoProgressoRoute
+  '/materias/concepcao-do-projeto/questoes': typeof MateriasConcepcaoDoProjetoQuestoesRoute
+  '/materias/concepcao-do-projeto/resumos': typeof MateriasConcepcaoDoProjetoResumosRoute
+  '/materias/concepcao-do-projeto/revisoes': typeof MateriasConcepcaoDoProjetoRevisoesRoute
+  '/materias/concepcao-do-projeto/': typeof MateriasConcepcaoDoProjetoIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/glossario': typeof GlossarioRoute
+  '/materia-nao-cursada': typeof MateriaNaoCursadaRoute
+  '/simulados': typeof SimuladosRoute
+  '/timeline': typeof TimelineRoute
+  '/materias/concepcao-do-projeto/flashcards': typeof MateriasConcepcaoDoProjetoFlashcardsRoute
+  '/materias/concepcao-do-projeto/materiais': typeof MateriasConcepcaoDoProjetoMateriaisRoute
+  '/materias/concepcao-do-projeto/progresso': typeof MateriasConcepcaoDoProjetoProgressoRoute
+  '/materias/concepcao-do-projeto/questoes': typeof MateriasConcepcaoDoProjetoQuestoesRoute
+  '/materias/concepcao-do-projeto/resumos': typeof MateriasConcepcaoDoProjetoResumosRoute
+  '/materias/concepcao-do-projeto/revisoes': typeof MateriasConcepcaoDoProjetoRevisoesRoute
+  '/materias/concepcao-do-projeto': typeof MateriasConcepcaoDoProjetoIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/glossario': typeof GlossarioRoute
+  '/materia-nao-cursada': typeof MateriaNaoCursadaRoute
+  '/simulados': typeof SimuladosRoute
+  '/timeline': typeof TimelineRoute
+  '/materias/concepcao-do-projeto': typeof MateriasConcepcaoDoProjetoRouteWithChildren
+  '/materias/concepcao-do-projeto/flashcards': typeof MateriasConcepcaoDoProjetoFlashcardsRoute
+  '/materias/concepcao-do-projeto/materiais': typeof MateriasConcepcaoDoProjetoMateriaisRoute
+  '/materias/concepcao-do-projeto/progresso': typeof MateriasConcepcaoDoProjetoProgressoRoute
+  '/materias/concepcao-do-projeto/questoes': typeof MateriasConcepcaoDoProjetoQuestoesRoute
+  '/materias/concepcao-do-projeto/resumos': typeof MateriasConcepcaoDoProjetoResumosRoute
+  '/materias/concepcao-do-projeto/revisoes': typeof MateriasConcepcaoDoProjetoRevisoesRoute
+  '/materias/concepcao-do-projeto/': typeof MateriasConcepcaoDoProjetoIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/glossario'
+    | '/materia-nao-cursada'
+    | '/simulados'
+    | '/timeline'
+    | '/materias/concepcao-do-projeto'
+    | '/materias/concepcao-do-projeto/flashcards'
+    | '/materias/concepcao-do-projeto/materiais'
+    | '/materias/concepcao-do-projeto/progresso'
+    | '/materias/concepcao-do-projeto/questoes'
+    | '/materias/concepcao-do-projeto/resumos'
+    | '/materias/concepcao-do-projeto/revisoes'
+    | '/materias/concepcao-do-projeto/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/glossario'
+    | '/materia-nao-cursada'
+    | '/simulados'
+    | '/timeline'
+    | '/materias/concepcao-do-projeto/flashcards'
+    | '/materias/concepcao-do-projeto/materiais'
+    | '/materias/concepcao-do-projeto/progresso'
+    | '/materias/concepcao-do-projeto/questoes'
+    | '/materias/concepcao-do-projeto/resumos'
+    | '/materias/concepcao-do-projeto/revisoes'
+    | '/materias/concepcao-do-projeto'
+  id:
+    | '__root__'
+    | '/'
+    | '/glossario'
+    | '/materia-nao-cursada'
+    | '/simulados'
+    | '/timeline'
+    | '/materias/concepcao-do-projeto'
+    | '/materias/concepcao-do-projeto/flashcards'
+    | '/materias/concepcao-do-projeto/materiais'
+    | '/materias/concepcao-do-projeto/progresso'
+    | '/materias/concepcao-do-projeto/questoes'
+    | '/materias/concepcao-do-projeto/resumos'
+    | '/materias/concepcao-do-projeto/revisoes'
+    | '/materias/concepcao-do-projeto/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  GlossarioRoute: typeof GlossarioRoute
+  MateriaNaoCursadaRoute: typeof MateriaNaoCursadaRoute
+  SimuladosRoute: typeof SimuladosRoute
+  TimelineRoute: typeof TimelineRoute
+  MateriasConcepcaoDoProjetoRoute: typeof MateriasConcepcaoDoProjetoRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/timeline': {
+      id: '/timeline'
+      path: '/timeline'
+      fullPath: '/timeline'
+      preLoaderRoute: typeof TimelineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/simulados': {
+      id: '/simulados'
+      path: '/simulados'
+      fullPath: '/simulados'
+      preLoaderRoute: typeof SimuladosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/materia-nao-cursada': {
+      id: '/materia-nao-cursada'
+      path: '/materia-nao-cursada'
+      fullPath: '/materia-nao-cursada'
+      preLoaderRoute: typeof MateriaNaoCursadaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/glossario': {
+      id: '/glossario'
+      path: '/glossario'
+      fullPath: '/glossario'
+      preLoaderRoute: typeof GlossarioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +235,105 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/materias/concepcao-do-projeto': {
+      id: '/materias/concepcao-do-projeto'
+      path: '/materias/concepcao-do-projeto'
+      fullPath: '/materias/concepcao-do-projeto'
+      preLoaderRoute: typeof MateriasConcepcaoDoProjetoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/materias/concepcao-do-projeto/': {
+      id: '/materias/concepcao-do-projeto/'
+      path: '/'
+      fullPath: '/materias/concepcao-do-projeto/'
+      preLoaderRoute: typeof MateriasConcepcaoDoProjetoIndexRouteImport
+      parentRoute: typeof MateriasConcepcaoDoProjetoRoute
+    }
+    '/materias/concepcao-do-projeto/revisoes': {
+      id: '/materias/concepcao-do-projeto/revisoes'
+      path: '/revisoes'
+      fullPath: '/materias/concepcao-do-projeto/revisoes'
+      preLoaderRoute: typeof MateriasConcepcaoDoProjetoRevisoesRouteImport
+      parentRoute: typeof MateriasConcepcaoDoProjetoRoute
+    }
+    '/materias/concepcao-do-projeto/resumos': {
+      id: '/materias/concepcao-do-projeto/resumos'
+      path: '/resumos'
+      fullPath: '/materias/concepcao-do-projeto/resumos'
+      preLoaderRoute: typeof MateriasConcepcaoDoProjetoResumosRouteImport
+      parentRoute: typeof MateriasConcepcaoDoProjetoRoute
+    }
+    '/materias/concepcao-do-projeto/questoes': {
+      id: '/materias/concepcao-do-projeto/questoes'
+      path: '/questoes'
+      fullPath: '/materias/concepcao-do-projeto/questoes'
+      preLoaderRoute: typeof MateriasConcepcaoDoProjetoQuestoesRouteImport
+      parentRoute: typeof MateriasConcepcaoDoProjetoRoute
+    }
+    '/materias/concepcao-do-projeto/progresso': {
+      id: '/materias/concepcao-do-projeto/progresso'
+      path: '/progresso'
+      fullPath: '/materias/concepcao-do-projeto/progresso'
+      preLoaderRoute: typeof MateriasConcepcaoDoProjetoProgressoRouteImport
+      parentRoute: typeof MateriasConcepcaoDoProjetoRoute
+    }
+    '/materias/concepcao-do-projeto/materiais': {
+      id: '/materias/concepcao-do-projeto/materiais'
+      path: '/materiais'
+      fullPath: '/materias/concepcao-do-projeto/materiais'
+      preLoaderRoute: typeof MateriasConcepcaoDoProjetoMateriaisRouteImport
+      parentRoute: typeof MateriasConcepcaoDoProjetoRoute
+    }
+    '/materias/concepcao-do-projeto/flashcards': {
+      id: '/materias/concepcao-do-projeto/flashcards'
+      path: '/flashcards'
+      fullPath: '/materias/concepcao-do-projeto/flashcards'
+      preLoaderRoute: typeof MateriasConcepcaoDoProjetoFlashcardsRouteImport
+      parentRoute: typeof MateriasConcepcaoDoProjetoRoute
+    }
   }
 }
 
+interface MateriasConcepcaoDoProjetoRouteChildren {
+  MateriasConcepcaoDoProjetoFlashcardsRoute: typeof MateriasConcepcaoDoProjetoFlashcardsRoute
+  MateriasConcepcaoDoProjetoMateriaisRoute: typeof MateriasConcepcaoDoProjetoMateriaisRoute
+  MateriasConcepcaoDoProjetoProgressoRoute: typeof MateriasConcepcaoDoProjetoProgressoRoute
+  MateriasConcepcaoDoProjetoQuestoesRoute: typeof MateriasConcepcaoDoProjetoQuestoesRoute
+  MateriasConcepcaoDoProjetoResumosRoute: typeof MateriasConcepcaoDoProjetoResumosRoute
+  MateriasConcepcaoDoProjetoRevisoesRoute: typeof MateriasConcepcaoDoProjetoRevisoesRoute
+  MateriasConcepcaoDoProjetoIndexRoute: typeof MateriasConcepcaoDoProjetoIndexRoute
+}
+
+const MateriasConcepcaoDoProjetoRouteChildren: MateriasConcepcaoDoProjetoRouteChildren =
+  {
+    MateriasConcepcaoDoProjetoFlashcardsRoute:
+      MateriasConcepcaoDoProjetoFlashcardsRoute,
+    MateriasConcepcaoDoProjetoMateriaisRoute:
+      MateriasConcepcaoDoProjetoMateriaisRoute,
+    MateriasConcepcaoDoProjetoProgressoRoute:
+      MateriasConcepcaoDoProjetoProgressoRoute,
+    MateriasConcepcaoDoProjetoQuestoesRoute:
+      MateriasConcepcaoDoProjetoQuestoesRoute,
+    MateriasConcepcaoDoProjetoResumosRoute:
+      MateriasConcepcaoDoProjetoResumosRoute,
+    MateriasConcepcaoDoProjetoRevisoesRoute:
+      MateriasConcepcaoDoProjetoRevisoesRoute,
+    MateriasConcepcaoDoProjetoIndexRoute: MateriasConcepcaoDoProjetoIndexRoute,
+  }
+
+const MateriasConcepcaoDoProjetoRouteWithChildren =
+  MateriasConcepcaoDoProjetoRoute._addFileChildren(
+    MateriasConcepcaoDoProjetoRouteChildren,
+  )
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  GlossarioRoute: GlossarioRoute,
+  MateriaNaoCursadaRoute: MateriaNaoCursadaRoute,
+  SimuladosRoute: SimuladosRoute,
+  TimelineRoute: TimelineRoute,
+  MateriasConcepcaoDoProjetoRoute: MateriasConcepcaoDoProjetoRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
