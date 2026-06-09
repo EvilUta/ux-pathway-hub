@@ -13,6 +13,7 @@ import { Route as TimelineRouteImport } from './routes/timeline'
 import { Route as MateriaNaoCursadaRouteImport } from './routes/materia-nao-cursada'
 import { Route as GlossarioRouteImport } from './routes/glossario'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PortfolioPublicoShareSlugRouteImport } from './routes/portfolio-publico.$shareSlug'
 import { Route as MateriasConcepcaoDoProjetoRouteImport } from './routes/materias.concepcao-do-projeto'
 import { Route as MateriasSlugRouteImport } from './routes/materias.$slug'
 import { Route as MateriasConcepcaoDoProjetoIndexRouteImport } from './routes/materias.concepcao-do-projeto.index'
@@ -47,6 +48,12 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PortfolioPublicoShareSlugRoute =
+  PortfolioPublicoShareSlugRouteImport.update({
+    id: '/portfolio-publico/$shareSlug',
+    path: '/portfolio-publico/$shareSlug',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const MateriasConcepcaoDoProjetoRoute =
   MateriasConcepcaoDoProjetoRouteImport.update({
     id: '/materias/concepcao-do-projeto',
@@ -127,6 +134,7 @@ export interface FileRoutesByFullPath {
   '/timeline': typeof TimelineRoute
   '/materias/$slug': typeof MateriasSlugRouteWithChildren
   '/materias/concepcao-do-projeto': typeof MateriasConcepcaoDoProjetoRouteWithChildren
+  '/portfolio-publico/$shareSlug': typeof PortfolioPublicoShareSlugRoute
   '/materias/$slug/flashcards': typeof MateriasSlugFlashcardsRoute
   '/materias/$slug/materiais': typeof MateriasSlugMateriaisRoute
   '/materias/$slug/portfolio-real': typeof MateriasSlugPortfolioRealRoute
@@ -144,6 +152,7 @@ export interface FileRoutesByTo {
   '/glossario': typeof GlossarioRoute
   '/materia-nao-cursada': typeof MateriaNaoCursadaRoute
   '/timeline': typeof TimelineRoute
+  '/portfolio-publico/$shareSlug': typeof PortfolioPublicoShareSlugRoute
   '/materias/$slug/flashcards': typeof MateriasSlugFlashcardsRoute
   '/materias/$slug/materiais': typeof MateriasSlugMateriaisRoute
   '/materias/$slug/portfolio-real': typeof MateriasSlugPortfolioRealRoute
@@ -164,6 +173,7 @@ export interface FileRoutesById {
   '/timeline': typeof TimelineRoute
   '/materias/$slug': typeof MateriasSlugRouteWithChildren
   '/materias/concepcao-do-projeto': typeof MateriasConcepcaoDoProjetoRouteWithChildren
+  '/portfolio-publico/$shareSlug': typeof PortfolioPublicoShareSlugRoute
   '/materias/$slug/flashcards': typeof MateriasSlugFlashcardsRoute
   '/materias/$slug/materiais': typeof MateriasSlugMateriaisRoute
   '/materias/$slug/portfolio-real': typeof MateriasSlugPortfolioRealRoute
@@ -185,6 +195,7 @@ export interface FileRouteTypes {
     | '/timeline'
     | '/materias/$slug'
     | '/materias/concepcao-do-projeto'
+    | '/portfolio-publico/$shareSlug'
     | '/materias/$slug/flashcards'
     | '/materias/$slug/materiais'
     | '/materias/$slug/portfolio-real'
@@ -202,6 +213,7 @@ export interface FileRouteTypes {
     | '/glossario'
     | '/materia-nao-cursada'
     | '/timeline'
+    | '/portfolio-publico/$shareSlug'
     | '/materias/$slug/flashcards'
     | '/materias/$slug/materiais'
     | '/materias/$slug/portfolio-real'
@@ -221,6 +233,7 @@ export interface FileRouteTypes {
     | '/timeline'
     | '/materias/$slug'
     | '/materias/concepcao-do-projeto'
+    | '/portfolio-publico/$shareSlug'
     | '/materias/$slug/flashcards'
     | '/materias/$slug/materiais'
     | '/materias/$slug/portfolio-real'
@@ -241,6 +254,7 @@ export interface RootRouteChildren {
   TimelineRoute: typeof TimelineRoute
   MateriasSlugRoute: typeof MateriasSlugRouteWithChildren
   MateriasConcepcaoDoProjetoRoute: typeof MateriasConcepcaoDoProjetoRouteWithChildren
+  PortfolioPublicoShareSlugRoute: typeof PortfolioPublicoShareSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -271,6 +285,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portfolio-publico/$shareSlug': {
+      id: '/portfolio-publico/$shareSlug'
+      path: '/portfolio-publico/$shareSlug'
+      fullPath: '/portfolio-publico/$shareSlug'
+      preLoaderRoute: typeof PortfolioPublicoShareSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/materias/concepcao-do-projeto': {
@@ -422,6 +443,7 @@ const rootRouteChildren: RootRouteChildren = {
   TimelineRoute: TimelineRoute,
   MateriasSlugRoute: MateriasSlugRouteWithChildren,
   MateriasConcepcaoDoProjetoRoute: MateriasConcepcaoDoProjetoRouteWithChildren,
+  PortfolioPublicoShareSlugRoute: PortfolioPublicoShareSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

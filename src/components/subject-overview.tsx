@@ -1,33 +1,43 @@
+import { useQuery } from "@tanstack/react-query";
 import { FileText } from "lucide-react";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
+import { useAuth } from "@/lib/auth";
 import {
   AVALIACAO_LABELS,
   getAvaliacaoStatus,
   getDisciplina,
   resolveDisciplina,
   STATUS_LABELS,
-  type AvaliacaoOverrides,
   type AvaliacaoStatus,
-  type DisciplinaStatusOverrides,
-  type DisciplinaUnlockOverrides,
 } from "@/lib/disciplinas";
-import { useLocalStorage } from "@/lib/storage";
+import { useSupabaseDisciplineState } from "@/lib/supabase-discipline-status";
+import {
+  loadLegacyItems,
+  shouldMigrateLegacyStorage,
+} from "@/lib/supabase-legacy";
+import { getSupabaseBrowserClient } from "@/lib/supabase";
 import { getSubjectStorageKeys } from "@/lib/subject-storage";
 
-type AvaliacaoNotas = Partial<Record<string, string>>;
+type CountRow = { id: string };
+type LegacyFlashcard = { id: string; pergunta: string; resposta: string };
+type LegacyResumo = { id: string; titulo: string; conteudo: string; data: string };
 
 export function SubjectOverview({ slug }: { slug: string }) {
+  const { user } = useAuth();
+  const supabase = getSupabaseBrowserClient();
   const storageKeys = getSubjectStorageKeys(slug);
-  const [flashcards] = useLocalStorage<unknown[]>(storageKeys.flashcards, []);
-  const [resumos] = useLocalStorage<unknown[]>(storageKeys.resumos, []);
-  const [statusOverrides] = useLocalStorage<DisciplinaStatusOverrides>("uxa-disciplinas-status", {});
-  const [unlockOverrides] = useLocalStorage<DisciplinaUnlockOverrides>("uxa-disciplinas-unlock", {});
-  const [avaliacaoOverrides, setAvaliacaoOverrides] = useLocalStorage<AvaliacaoOverrides>("uxa-disciplinas-avaliacao", {});
-  const [avaliacaoNotas, setAvaliacaoNotas] = useLocalStorage<AvaliacaoNotas>("uxa-disciplinas-avaliacao-nota", {});
+  const {
+    statusOverrides,
+    unlockOverrides,
+    avaliacaoOverrides,
+    avaliacaoNotas,
+    updateDisciplinaState,
+  } = useSupabaseDisciplineState();
   const disciplinaBase = getDisciplina(slug)!;
   const avaliacaoStatus = getAvaliacaoStatus(disciplinaBase, avaliacaoOverrides[slug]);
   const notaAvaliacao = avaliacaoNotas[slug] ?? "";
@@ -38,20 +48,74 @@ export function SubjectOverview({ slug }: { slug: string }) {
     avaliacaoStatus,
   );
 
+  const { data: flashcardsCount = 0 } = useQuery<number>({
+    queryKey: ["flashcards-count", user?.id, slug],
+    enabled: Boolean(user && supabase),
+    queryFn: async () => {
+      if (!supabase || !user) return 0;
+
+      const { data, error } = await supabase
+        .from("flashcards")
+        .select("id")
+        .eq("user_id", user.id)
+        .eq("subject_slug", slug);
+
+      if (error) throw error;
+
+      const rows = (data ?? []) as CountRow[];
+
+      if (
+        rows.length > 0 ||
+        !(await shouldMigrateLegacyStorage(storageKeys.flashcards, { supabase, userId: user.id }))
+      ) {
+        return rows.length;
+      }
+
+      return loadLegacyItems<LegacyFlashcard[]>(storageKeys.flashcards, []).length;
+    },
+  });
+
+  const { data: resumosCount = 0 } = useQuery<number>({
+    queryKey: ["resumos-count", user?.id, slug],
+    enabled: Boolean(user && supabase),
+    queryFn: async () => {
+      if (!supabase || !user) return 0;
+
+      const { data, error } = await supabase
+        .from("resumos")
+        .select("id")
+        .eq("user_id", user.id)
+        .eq("subject_slug", slug);
+
+      if (error) throw error;
+
+      const rows = (data ?? []) as CountRow[];
+
+      if (
+        rows.length > 0 ||
+        !(await shouldMigrateLegacyStorage(storageKeys.resumos, { supabase, userId: user.id }))
+      ) {
+        return rows.length;
+      }
+
+      return loadLegacyItems<LegacyResumo[]>(storageKeys.resumos, []).length;
+    },
+  });
+
   const stats = [
     { label: "Status", value: STATUS_LABELS[disciplina.status] },
     { label: "Avaliação", value: AVALIACAO_LABELS[avaliacaoStatus] },
-    { label: "Flashcards", value: flashcards.length },
-    { label: "Resumos", value: resumos.length },
+    { label: "Flashcards", value: flashcardsCount },
+    { label: "Resumos", value: resumosCount },
   ];
 
   function handleAvaliacaoChange(status: AvaliacaoStatus) {
-    setAvaliacaoOverrides((current) => ({ ...current, [slug]: status }));
+    updateDisciplinaState({ slug, avaliacaoStatus: status });
   }
 
   function handleNotaChange(value: string) {
     const sanitized = value.replace(/[^0-9.,]/g, "");
-    setAvaliacaoNotas((current) => ({ ...current, [slug]: sanitized }));
+    updateDisciplinaState({ slug, avaliacaoNota: sanitized || null });
   }
 
   return (
@@ -63,7 +127,9 @@ export function SubjectOverview({ slug }: { slug: string }) {
 
       <div className="flex flex-wrap items-center gap-2">
         {disciplina.status === "concluida" && (
-          <Badge className="bg-emerald-500/15 text-emerald-700 hover:bg-emerald-500/15 dark:text-emerald-400">Concluída</Badge>
+          <Badge className="bg-emerald-500/15 text-emerald-700 hover:bg-emerald-500/15 dark:text-emerald-400">
+            Concluída
+          </Badge>
         )}
         {disciplina.status === "em-andamento" && <Badge variant="secondary">Em andamento</Badge>}
         {disciplina.status === "bloqueada" && <Badge variant="outline">Bloqueada</Badge>}
@@ -82,13 +148,20 @@ export function SubjectOverview({ slug }: { slug: string }) {
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-base">
-            <FileText className={`h-4 w-4 ${avaliacaoStatus === "concluida" ? "text-emerald-600" : "text-muted-foreground"}`} />
+            <FileText
+              className={`h-4 w-4 ${avaliacaoStatus === "concluida" ? "text-emerald-600" : "text-muted-foreground"}`}
+            />
             Lembrete de avaliação
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex flex-wrap items-center gap-2">
-            <Badge variant={avaliacaoStatus === "concluida" ? "default" : "outline"} className={avaliacaoStatus === "concluida" ? "bg-emerald-600 hover:bg-emerald-600" : ""}>
+            <Badge
+              variant={avaliacaoStatus === "concluida" ? "default" : "outline"}
+              className={
+                avaliacaoStatus === "concluida" ? "bg-emerald-600 hover:bg-emerald-600" : ""
+              }
+            >
               Avaliação {AVALIACAO_LABELS[avaliacaoStatus].toLowerCase()}
             </Badge>
           </div>
@@ -96,12 +169,17 @@ export function SubjectOverview({ slug }: { slug: string }) {
             A matéria só poderá ser concluída quando a avaliação estiver marcada como concluída.
           </p>
           <div className="flex flex-wrap gap-2">
-            <Button variant={avaliacaoStatus === "pendente" ? "default" : "outline"} onClick={() => handleAvaliacaoChange("pendente")}>
+            <Button
+              variant={avaliacaoStatus === "pendente" ? "default" : "outline"}
+              onClick={() => handleAvaliacaoChange("pendente")}
+            >
               Pendente
             </Button>
             <Button
               variant={avaliacaoStatus === "concluida" ? "default" : "outline"}
-              className={avaliacaoStatus === "concluida" ? "bg-emerald-600 hover:bg-emerald-700" : ""}
+              className={
+                avaliacaoStatus === "concluida" ? "bg-emerald-600 hover:bg-emerald-700" : ""
+              }
               onClick={() => handleAvaliacaoChange("concluida")}
             >
               Concluída

@@ -11,5 +11,11 @@ function Flashcards() {
   const disciplina = getDisciplina("concepcao-do-projeto")!;
   const storageKeys = getSubjectStorageKeys(disciplina.slug);
 
-  return <SubjectFlashcardsPage disciplineName={disciplina.nome} storageKey={storageKeys.flashcards} />;
+  return (
+    <SubjectFlashcardsPage
+      disciplineName={disciplina.nome}
+      subjectSlug={disciplina.slug}
+      storageKey={storageKeys.flashcards}
+    />
+  );
 }

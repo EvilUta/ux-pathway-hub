@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+
 import { SubjectMateriaisPage } from "@/components/subject-materiais-page";
 import { getDisciplina } from "@/lib/disciplinas";
 import { getSubjectStorageKeys } from "@/lib/subject-storage";
@@ -12,5 +13,11 @@ function GenericMateriais() {
   const disciplina = getDisciplina(slug)!;
   const storageKeys = getSubjectStorageKeys(slug);
 
-  return <SubjectMateriaisPage disciplineName={disciplina.nome} storageKey={storageKeys.materiais} />;
+  return (
+    <SubjectMateriaisPage
+      disciplineName={disciplina.nome}
+      subjectSlug={slug}
+      storageKey={storageKeys.materiais}
+    />
+  );
 }

@@ -24,5 +24,11 @@ function GenericPortfolioReal() {
   const disciplina = getDisciplina(slug)!;
   const storageKeys = getSubjectStorageKeys(slug);
 
-  return <SubjectPortfolioRealPage disciplineName={disciplina.nome} storageKey={storageKeys.portfolioReal} />;
+  return (
+    <SubjectPortfolioRealPage
+      disciplineName={disciplina.nome}
+      subjectSlug={slug}
+      storageKey={storageKeys.portfolioReal}
+    />
+  );
 }

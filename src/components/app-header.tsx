@@ -1,5 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { GraduationCap } from "lucide-react";
+import { useAuth } from "@/lib/auth";
+import { AuthControls } from "./auth-controls";
 import { ThemeToggle } from "./theme-toggle";
 
 const navItems = [
@@ -10,6 +12,8 @@ const navItems = [
 ];
 
 export function AppHeader() {
+  const { user } = useAuth();
+
   return (
     <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur">
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
@@ -19,20 +23,29 @@ export function AppHeader() {
           </span>
           <span>UX Academy</span>
         </Link>
-        <nav className="hidden items-center gap-1 md:flex">
-          {navItems.map((n) => (
-            <Link
-              key={n.to}
-              to={n.to}
-              activeOptions={{ exact: n.to === "/" }}
-              className="rounded-md px-3 py-1.5 text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
-              activeProps={{ className: "rounded-md px-3 py-1.5 text-sm bg-accent text-foreground font-medium" }}
-            >
-              {n.label}
-            </Link>
-          ))}
-        </nav>
-        <ThemeToggle />
+        {user ? (
+          <nav className="hidden items-center gap-1 md:flex">
+            {navItems.map((n) => (
+              <Link
+                key={n.to}
+                to={n.to}
+                activeOptions={{ exact: n.to === "/" }}
+                className="rounded-md px-3 py-1.5 text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
+                activeProps={{ className: "rounded-md px-3 py-1.5 text-sm bg-accent text-foreground font-medium" }}
+              >
+                {n.label}
+              </Link>
+            ))}
+          </nav>
+        ) : (
+          <div className="hidden md:block text-sm text-muted-foreground">
+            Entre para desbloquear o painel de estudos
+          </div>
+        )}
+        <div className="flex items-center gap-2">
+          <AuthControls />
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   );

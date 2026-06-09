@@ -11,5 +11,11 @@ function Resumos() {
   const disciplina = getDisciplina("concepcao-do-projeto")!;
   const storageKeys = getSubjectStorageKeys(disciplina.slug);
 
-  return <SubjectResumosPage disciplineName={disciplina.nome} storageKey={storageKeys.resumos} />;
+  return (
+    <SubjectResumosPage
+      disciplineName={disciplina.nome}
+      subjectSlug={disciplina.slug}
+      storageKey={storageKeys.resumos}
+    />
+  );
 }

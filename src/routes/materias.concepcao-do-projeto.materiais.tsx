@@ -11,5 +11,11 @@ function Materiais() {
   const disciplina = getDisciplina("concepcao-do-projeto")!;
   const storageKeys = getSubjectStorageKeys(disciplina.slug);
 
-  return <SubjectMateriaisPage disciplineName={disciplina.nome} storageKey={storageKeys.materiais} />;
+  return (
+    <SubjectMateriaisPage
+      disciplineName={disciplina.nome}
+      subjectSlug={disciplina.slug}
+      storageKey={storageKeys.materiais}
+    />
+  );
 }

@@ -12,5 +12,11 @@ function GenericResumos() {
   const disciplina = getDisciplina(slug)!;
   const storageKeys = getSubjectStorageKeys(slug);
 
-  return <SubjectResumosPage disciplineName={disciplina.nome} storageKey={storageKeys.resumos} />;
+  return (
+    <SubjectResumosPage
+      disciplineName={disciplina.nome}
+      subjectSlug={slug}
+      storageKey={storageKeys.resumos}
+    />
+  );
 }

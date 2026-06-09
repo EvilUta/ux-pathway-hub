@@ -1,15 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { CheckCircle2, Clock3, Lock } from "lucide-react";
+
 import {
   DISCIPLINAS,
   getAvaliacaoStatus,
-  STATUS_LABELS,
   resolveDisciplina,
-  type AvaliacaoOverrides,
-  type DisciplinaStatusOverrides,
-  type DisciplinaUnlockOverrides,
+  STATUS_LABELS,
 } from "@/lib/disciplinas";
-import { useLocalStorage } from "@/lib/storage";
+import { useSupabaseDisciplineState } from "@/lib/supabase-discipline-status";
 
 export const Route = createFileRoute("/timeline")({
   head: () => ({ meta: [{ title: "Timeline - UX Academy" }] }),
@@ -17,9 +15,8 @@ export const Route = createFileRoute("/timeline")({
 });
 
 function Timeline() {
-  const [statusOverrides] = useLocalStorage<DisciplinaStatusOverrides>("uxa-disciplinas-status", {});
-  const [unlockOverrides] = useLocalStorage<DisciplinaUnlockOverrides>("uxa-disciplinas-unlock", {});
-  const [avaliacaoOverrides] = useLocalStorage<AvaliacaoOverrides>("uxa-disciplinas-avaliacao", {});
+  const { statusOverrides, unlockOverrides, avaliacaoOverrides, isLoading } =
+    useSupabaseDisciplineState();
   const disciplinas = DISCIPLINAS.map((disciplina) => {
     const avaliacaoStatus = getAvaliacaoStatus(disciplina, avaliacaoOverrides[disciplina.slug]);
     return resolveDisciplina(
@@ -34,6 +31,9 @@ function Timeline() {
     <div className="mx-auto max-w-3xl px-4 py-10">
       <h1 className="text-3xl font-bold tracking-tight">Linha do Tempo da Pós</h1>
       <p className="mt-1 text-muted-foreground">Acompanhe seu avanço por toda a pós-graduação.</p>
+      {isLoading && (
+        <p className="mt-4 text-sm text-muted-foreground">Carregando status das disciplinas...</p>
+      )}
 
       <ol className="relative mt-10 border-l border-border pl-6">
         {disciplinas.map((d, i) => {
@@ -60,7 +60,9 @@ function Timeline() {
                 )}
               </span>
               <div className="flex items-baseline justify-between">
-                <h3 className={`text-base font-medium ${d.status === "bloqueada" ? "text-muted-foreground" : ""}`}>
+                <h3
+                  className={`text-base font-medium ${d.status === "bloqueada" ? "text-muted-foreground" : ""}`}
+                >
                   {i + 1}. {d.nome}
                 </h3>
                 <span className="text-xs text-muted-foreground">{STATUS_LABELS[d.status]}</span>
