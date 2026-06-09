@@ -1,4 +1,4 @@
-```md
+
 # UX Academy
 
 Plataforma pessoal de estudos e organização da minha pós-graduação em UX Design, desenvolvida para centralizar conteúdos, acompanhar progresso por disciplina e apresentar entregas do portfólio em uma experiência única.
