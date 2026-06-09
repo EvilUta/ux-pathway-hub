@@ -6,22 +6,26 @@ import { getSupabaseBrowserClient } from "@/lib/supabase";
 import { AuthMethods } from "@/components/auth-methods";
 import { Button } from "@/components/ui/button";
 
+export async function signOutWithToast() {
+  const supabase = getSupabaseBrowserClient();
+
+  if (!supabase) return;
+
+  const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    toast.error(error.message);
+    return;
+  }
+
+  toast.success("Sessao encerrada.");
+}
+
 export function AuthControls() {
   const { configured, loading, user } = useAuth();
 
   async function handleSignOut() {
-    const supabase = getSupabaseBrowserClient();
-
-    if (!supabase) return;
-
-    const { error } = await supabase.auth.signOut();
-
-    if (error) {
-      toast.error(error.message);
-      return;
-    }
-
-    toast.success("Sessao encerrada.");
+    await signOutWithToast();
   }
 
   if (!configured) {

@@ -133,7 +133,7 @@ function AuthenticatedApp() {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-28 text-foreground md:pb-24">
+    <div className="min-h-screen bg-background pb-16 text-foreground md:pb-24">
       {!isPublicPortfolioRoute && <AppHeader />}
       {content}
       <AppFooter />
