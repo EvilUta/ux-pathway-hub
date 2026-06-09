@@ -7,6 +7,10 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
+  // Force Nitro to emit a Vercel-compatible build during deployment.
+  nitro: {
+    preset: "vercel",
+  },
   vite: {
     server: {
       host: "127.0.0.1",
