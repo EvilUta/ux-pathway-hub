@@ -19,6 +19,24 @@ export function saveLS<T>(key: string, value: T): void {
   }
 }
 
+export function loadLSFlag(key: string): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return window.localStorage.getItem(key) === "1";
+  } catch {
+    return false;
+  }
+}
+
+export function saveLSFlag(key: string, value: boolean): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(key, value ? "1" : "0");
+  } catch {
+    /* ignore */
+  }
+}
+
 export function useLocalStorage<T>(key: string, initial: T): [T, (v: T | ((p: T) => T)) => void] {
   const [state, setState] = useState<T>(initial);
   const [hydrated, setHydrated] = useState(false);

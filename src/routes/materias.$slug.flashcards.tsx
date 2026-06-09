@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+
 import { SubjectFlashcardsPage } from "@/components/subject-flashcards-page";
 import { getDisciplina } from "@/lib/disciplinas";
 import { getSubjectStorageKeys } from "@/lib/subject-storage";
@@ -12,5 +13,11 @@ function GenericFlashcards() {
   const disciplina = getDisciplina(slug)!;
   const storageKeys = getSubjectStorageKeys(slug);
 
-  return <SubjectFlashcardsPage disciplineName={disciplina.nome} storageKey={storageKeys.flashcards} />;
+  return (
+    <SubjectFlashcardsPage
+      disciplineName={disciplina.nome}
+      subjectSlug={slug}
+      storageKey={storageKeys.flashcards}
+    />
+  );
 }

@@ -4,14 +4,20 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
+import { AuthLoadingScreen } from "../components/auth-loading-screen";
+import { AuthRequiredScreen } from "../components/auth-required-screen";
+import { Toaster } from "../components/ui/sonner";
+import { AuthProvider, useAuth } from "../lib/auth";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AppHeader } from "../components/app-header";
+import { AppFooter } from "../components/app-footer";
 
 function NotFoundComponent() {
   return (
@@ -103,10 +109,34 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="min-h-screen bg-background text-foreground">
-        <AppHeader />
-        <Outlet />
-      </div>
+      <AuthProvider>
+        <AuthenticatedApp />
+        <Toaster richColors />
+      </AuthProvider>
     </QueryClientProvider>
+  );
+}
+
+function AuthenticatedApp() {
+  const { configured, loading, user } = useAuth();
+  const pathname = useRouterState({
+    select: (state) => state.location.pathname,
+  });
+  const isPublicPortfolioRoute = pathname.startsWith("/portfolio-publico/");
+
+  let content = <Outlet />;
+
+  if (!isPublicPortfolioRoute && configured && loading) {
+    content = <AuthLoadingScreen />;
+  } else if (!isPublicPortfolioRoute && configured && !user) {
+    content = <AuthRequiredScreen />;
+  }
+
+  return (
+    <div className="min-h-screen bg-background pb-28 text-foreground md:pb-24">
+      {!isPublicPortfolioRoute && <AppHeader />}
+      {content}
+      <AppFooter />
+    </div>
   );
 }

@@ -1,6 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, CheckCircle2, FileText, Lock, LockOpen, BookOpen, Trophy, Clock } from "lucide-react";
+import {
+  ArrowRight,
+  BookOpen,
+  CheckCircle2,
+  Clock,
+  FileText,
+  Lock,
+  LockOpen,
+  Trophy,
+} from "lucide-react";
 import { useState } from "react";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,26 +20,29 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Progress } from "@/components/ui/progress";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   AVALIACAO_LABELS,
   DISCIPLINAS,
   getAvaliacaoStatus,
   podeConcluirDisciplina,
   resolveDisciplina,
-  type AvaliacaoOverrides,
   type AvaliacaoStatus,
   type DisciplinaManualStatus,
-  type DisciplinaStatusOverrides,
-  type DisciplinaUnlockOverrides,
 } from "@/lib/disciplinas";
-import { useLocalStorage } from "@/lib/storage";
+import { useSupabaseDisciplineState } from "@/lib/supabase-discipline-status";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -42,9 +55,14 @@ export const Route = createFileRoute("/")({
 });
 
 function Dashboard() {
-  const [statusOverrides, setStatusOverrides] = useLocalStorage<DisciplinaStatusOverrides>("uxa-disciplinas-status", {});
-  const [unlockOverrides, setUnlockOverrides] = useLocalStorage<DisciplinaUnlockOverrides>("uxa-disciplinas-unlock", {});
-  const [avaliacaoOverrides, setAvaliacaoOverrides] = useLocalStorage<AvaliacaoOverrides>("uxa-disciplinas-avaliacao", {});
+  const {
+    statusOverrides,
+    unlockOverrides,
+    avaliacaoOverrides,
+    updateDisciplinaState,
+    isLoading,
+    isSaving,
+  } = useSupabaseDisciplineState();
   const [blockedConclusionSlug, setBlockedConclusionSlug] = useState<string | null>(null);
   const [reminderPopoverSlug, setReminderPopoverSlug] = useState<string | null>(null);
 
@@ -70,20 +88,25 @@ function Dashboard() {
     { label: "Progresso geral", value: `${progressoGeral}%`, icon: CheckCircle2 },
   ];
 
-  function handleStatusChange(slug: string, status: DisciplinaManualStatus, avaliacaoStatus: AvaliacaoStatus) {
+  function handleStatusChange(
+    slug: string,
+    status: DisciplinaManualStatus,
+    avaliacaoStatus: AvaliacaoStatus,
+  ) {
     if (status === "concluida" && !podeConcluirDisciplina(avaliacaoStatus)) {
       setBlockedConclusionSlug(slug);
       return;
     }
-    setStatusOverrides((current) => ({ ...current, [slug]: status }));
+
+    updateDisciplinaState({ slug, statusOverride: status });
   }
 
   function handleUnlockToggle(slug: string, unlocked: boolean) {
-    setUnlockOverrides((current) => ({ ...current, [slug]: unlocked }));
+    updateDisciplinaState({ slug, unlockOverride: unlocked });
   }
 
   function handleAvaliacaoChange(slug: string, status: AvaliacaoStatus) {
-    setAvaliacaoOverrides((current) => ({ ...current, [slug]: status }));
+    updateDisciplinaState({ slug, avaliacaoStatus: status });
     setReminderPopoverSlug(null);
   }
 
@@ -124,6 +147,9 @@ function Dashboard() {
 
       <section>
         <h2 className="mb-4 text-xl font-semibold">Disciplinas</h2>
+        {isLoading && (
+          <p className="mb-4 text-sm text-muted-foreground">Carregando status das disciplinas...</p>
+        )}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {disciplinas.map((d) => {
             const to = d.liberada ? `/materias/${d.slug}` : "/materia-nao-cursada";
@@ -133,8 +159,14 @@ function Dashboard() {
             const avaliacaoConcluida = avaliacaoStatus === "concluida";
 
             return (
-              <Card key={d.slug} className={`group relative overflow-hidden transition ${d.liberada ? "hover:border-primary" : "opacity-90"}`}>
-                <Popover open={reminderPopoverSlug === d.slug} onOpenChange={(open) => setReminderPopoverSlug(open ? d.slug : null)}>
+              <Card
+                key={d.slug}
+                className={`group relative overflow-hidden transition ${d.liberada ? "hover:border-primary" : "opacity-90"}`}
+              >
+                <Popover
+                  open={reminderPopoverSlug === d.slug}
+                  onOpenChange={(open) => setReminderPopoverSlug(open ? d.slug : null)}
+                >
                   <PopoverTrigger asChild>
                     <button
                       type="button"
@@ -145,7 +177,9 @@ function Dashboard() {
                       }`}
                       aria-label="Lembrete de avaliação"
                       onMouseEnter={() => setReminderPopoverSlug(d.slug)}
-                      onMouseLeave={() => setReminderPopoverSlug((current) => (current === d.slug ? null : current))}
+                      onMouseLeave={() =>
+                        setReminderPopoverSlug((current) => (current === d.slug ? null : current))
+                      }
                     >
                       <FileText className="h-4 w-4" />
                     </button>
@@ -154,18 +188,23 @@ function Dashboard() {
                     align="end"
                     className="space-y-3"
                     onMouseEnter={() => setReminderPopoverSlug(d.slug)}
-                    onMouseLeave={() => setReminderPopoverSlug((current) => (current === d.slug ? null : current))}
+                    onMouseLeave={() =>
+                      setReminderPopoverSlug((current) => (current === d.slug ? null : current))
+                    }
                   >
                     <div className="space-y-1">
                       <p className="text-sm font-semibold">Lembrete de avaliação</p>
                       <p className="text-sm text-muted-foreground">{d.nome}</p>
-                      <p className="text-sm text-muted-foreground">Status atual: {AVALIACAO_LABELS[avaliacaoStatus]}</p>
+                      <p className="text-sm text-muted-foreground">
+                        Status atual: {AVALIACAO_LABELS[avaliacaoStatus]}
+                      </p>
                     </div>
                     <div className="grid gap-2">
                       <Button
                         type="button"
                         size="sm"
                         variant={avaliacaoStatus === "pendente" ? "default" : "outline"}
+                        disabled={isSaving}
                         onClick={() => handleAvaliacaoChange(d.slug, "pendente")}
                       >
                         Pendente
@@ -175,6 +214,7 @@ function Dashboard() {
                         size="sm"
                         variant={avaliacaoStatus === "concluida" ? "default" : "outline"}
                         className={avaliacaoConcluida ? "bg-emerald-600 hover:bg-emerald-700" : ""}
+                        disabled={isSaving}
                         onClick={() => handleAvaliacaoChange(d.slug, "concluida")}
                       >
                         Concluída
@@ -196,12 +236,20 @@ function Dashboard() {
                   <HoverCardContent align="end" className="space-y-3">
                     <div className="space-y-1">
                       <p className="text-sm font-semibold">{d.nome}</p>
-                      {!d.liberada && <p className="text-sm text-muted-foreground">Deseja desbloquear a matéria antecipadamente?</p>}
+                      {!d.liberada && (
+                        <p className="text-sm text-muted-foreground">
+                          Deseja desbloquear a matéria antecipadamente?
+                        </p>
+                      )}
                       {d.liberadaAntecipadamente && (
-                        <p className="text-sm text-muted-foreground">Esta disciplina foi desbloqueada antecipadamente e já pode ser acessada.</p>
+                        <p className="text-sm text-muted-foreground">
+                          Esta disciplina foi desbloqueada antecipadamente e já pode ser acessada.
+                        </p>
                       )}
                       {d.liberadaPorData && (
-                        <p className="text-sm text-muted-foreground">Esta disciplina já está liberada pela data de início.</p>
+                        <p className="text-sm text-muted-foreground">
+                          Esta disciplina já está liberada pela data de início.
+                        </p>
                       )}
                     </div>
                     {!d.liberadaPorData && (
@@ -210,9 +258,12 @@ function Dashboard() {
                         size="sm"
                         className="w-full"
                         variant={desbloqueioAntecipadoAtivo ? "outline" : "default"}
+                        disabled={isSaving}
                         onClick={() => handleUnlockToggle(d.slug, !desbloqueioAntecipadoAtivo)}
                       >
-                        {desbloqueioAntecipadoAtivo ? "Voltar para liberação automática" : "Desbloquear antecipadamente"}
+                        {desbloqueioAntecipadoAtivo
+                          ? "Voltar para liberação automática"
+                          : "Desbloquear antecipadamente"}
                       </Button>
                     )}
                   </HoverCardContent>
@@ -235,21 +286,35 @@ function Dashboard() {
                 <CardContent className="space-y-4">
                   <div className="flex flex-wrap items-center gap-2">
                     {d.status === "concluida" && (
-                      <Badge className="bg-emerald-500/15 text-emerald-700 hover:bg-emerald-500/15 dark:text-emerald-400">Concluída</Badge>
+                      <Badge className="bg-emerald-500/15 text-emerald-700 hover:bg-emerald-500/15 dark:text-emerald-400">
+                        Concluída
+                      </Badge>
                     )}
                     {d.status === "em-andamento" && <Badge variant="secondary">Em andamento</Badge>}
                     {d.status === "bloqueada" && <Badge variant="outline">Bloqueada</Badge>}
-                    <Badge variant={avaliacaoConcluida ? "default" : "outline"} className={avaliacaoConcluida ? "bg-emerald-600 hover:bg-emerald-600" : ""}>
+                    <Badge
+                      variant={avaliacaoConcluida ? "default" : "outline"}
+                      className={avaliacaoConcluida ? "bg-emerald-600 hover:bg-emerald-600" : ""}
+                    >
                       Avaliação {avaliacaoConcluida ? "concluída" : "pendente"}
                     </Badge>
                   </div>
 
                   {d.liberada ? (
                     <div className="space-y-2">
-                      <span className="text-xs font-medium text-muted-foreground">Atualizar status</span>
+                      <span className="text-xs font-medium text-muted-foreground">
+                        Atualizar status
+                      </span>
                       <Select
                         value={statusSelecionavel}
-                        onValueChange={(value) => handleStatusChange(d.slug, value as DisciplinaManualStatus, avaliacaoStatus)}
+                        disabled={isSaving}
+                        onValueChange={(value) =>
+                          handleStatusChange(
+                            d.slug,
+                            value as DisciplinaManualStatus,
+                            avaliacaoStatus,
+                          )
+                        }
                       >
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Selecione o status" />
@@ -261,7 +326,9 @@ function Dashboard() {
                       </Select>
                     </div>
                   ) : (
-                    <p className="text-xs text-muted-foreground">Esta disciplina muda automaticamente para em andamento na data de início.</p>
+                    <p className="text-xs text-muted-foreground">
+                      Esta disciplina muda automaticamente para em andamento na data de início.
+                    </p>
                   )}
 
                   <div>
@@ -285,16 +352,22 @@ function Dashboard() {
         </div>
       </section>
 
-      <AlertDialog open={Boolean(blockedConclusionSlug)} onOpenChange={(open) => !open && setBlockedConclusionSlug(null)}>
+      <AlertDialog
+        open={Boolean(blockedConclusionSlug)}
+        onOpenChange={(open) => !open && setBlockedConclusionSlug(null)}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>A avaliação precisa ser concluída primeiro</AlertDialogTitle>
             <AlertDialogDescription>
-              A matéria só pode ser marcada como concluída depois que o lembrete de avaliação estiver marcado como concluído.
+              A matéria só pode ser marcada como concluída depois que o lembrete de avaliação
+              estiver marcado como concluído.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogAction onClick={() => setBlockedConclusionSlug(null)}>Entendi</AlertDialogAction>
+            <AlertDialogAction onClick={() => setBlockedConclusionSlug(null)}>
+              Entendi
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

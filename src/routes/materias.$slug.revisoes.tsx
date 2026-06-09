@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+
 import { SubjectRevisoesPage } from "@/components/subject-revisoes-page";
 import { getDisciplina } from "@/lib/disciplinas";
 import { getSubjectStorageKeys } from "@/lib/subject-storage";
@@ -12,5 +13,11 @@ function GenericRevisoes() {
   const disciplina = getDisciplina(slug)!;
   const storageKeys = getSubjectStorageKeys(slug);
 
-  return <SubjectRevisoesPage disciplineName={disciplina.nome} storageKey={storageKeys.revisoes} />;
+  return (
+    <SubjectRevisoesPage
+      disciplineName={disciplina.nome}
+      subjectSlug={slug}
+      storageKey={storageKeys.revisoes}
+    />
+  );
 }

@@ -11,5 +11,11 @@ function Revisoes() {
   const disciplina = getDisciplina("concepcao-do-projeto")!;
   const storageKeys = getSubjectStorageKeys(disciplina.slug);
 
-  return <SubjectRevisoesPage disciplineName={disciplina.nome} storageKey={storageKeys.revisoes} />;
+  return (
+    <SubjectRevisoesPage
+      disciplineName={disciplina.nome}
+      subjectSlug={disciplina.slug}
+      storageKey={storageKeys.revisoes}
+    />
+  );
 }
