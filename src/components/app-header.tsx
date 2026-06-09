@@ -1,8 +1,18 @@
 import { Link } from "@tanstack/react-router";
-import { GraduationCap } from "lucide-react";
+import { GraduationCap, LogOut, Menu } from "lucide-react";
 import { useAuth } from "@/lib/auth";
-import { AuthControls } from "./auth-controls";
+import { AuthControls, signOutWithToast } from "./auth-controls";
 import { ThemeToggle } from "./theme-toggle";
+import { Button } from "./ui/button";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "./ui/sheet";
 
 const navItems = [
   { to: "/", label: "Dashboard" },
@@ -43,7 +53,79 @@ export function AppHeader() {
           </div>
         )}
         <div className="flex items-center gap-2">
-          <AuthControls />
+          {user ? (
+            <>
+              <div className="hidden md:flex">
+                <AuthControls />
+              </div>
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    className="md:hidden"
+                    aria-label="Abrir menu"
+                  >
+                    <Menu className="h-4 w-4" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-[85vw] sm:max-w-sm">
+                  <SheetHeader className="pr-8 text-left">
+                    <SheetTitle>Menu</SheetTitle>
+                    <SheetDescription>
+                      Acesse as principais areas do projeto e encerre sua sessao.
+                    </SheetDescription>
+                  </SheetHeader>
+
+                  <div className="mt-6 flex flex-col gap-5">
+                    <div className="space-y-1">
+                      <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+                        Navegacao
+                      </p>
+                      <nav className="flex flex-col gap-2">
+                        {navItems.map((n) => (
+                          <SheetClose asChild key={n.to}>
+                            <Link
+                              to={n.to}
+                              activeOptions={{ exact: n.to === "/" }}
+                              className="rounded-lg border border-border/70 px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-accent hover:text-foreground"
+                              activeProps={{ className: "rounded-lg border border-primary/30 bg-primary/10 px-4 py-3 text-sm font-medium text-primary" }}
+                            >
+                              {n.label}
+                            </Link>
+                          </SheetClose>
+                        ))}
+                      </nav>
+                    </div>
+
+                    <div className="space-y-3 border-t pt-4">
+                      <div className="space-y-1">
+                        <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+                          Conta
+                        </p>
+                        <p className="truncate text-sm text-muted-foreground">{user.email}</p>
+                      </div>
+
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="w-full justify-start"
+                        onClick={() => {
+                          void signOutWithToast();
+                        }}
+                      >
+                        <LogOut className="h-4 w-4" />
+                        Sair
+                      </Button>
+                    </div>
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </>
+          ) : (
+            <AuthControls />
+          )}
           <ThemeToggle />
         </div>
       </div>
